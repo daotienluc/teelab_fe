@@ -1,50 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { pathDefault } from "../../../common/path";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { formattedAmount } from "../../../common/helpers";
 import useFetchProducts from "../../../hooks/useFetchProducts";
-import { useDispatch } from "react-redux";
-import { addToCard } from "../../../redux/slice/cart.slice";
-import { toast } from "react-toastify";
-import { cartServices } from "../../../services/cart.services";
-import jwtDecode from "jwt-decode";
+import { useCartContext } from "../../../hooks/userCartContext";
 
 const AoThun = () => {
   const dataAoThun = 11;
   const { products } = useFetchProducts(dataAoThun);
-  const userData = localStorage.getItem("userData");
-  const userDataObject = JSON.parse(userData);
-  const userInfo = jwtDecode(userDataObject.accessToken);
-  const id = userInfo.userId;
-  const handleAddToCart = (product) => {
-    if (product.sizes === null) {
-      product.sizes = "M";
-    }
-    const payload = {
-      ...product,
-      quantity: (product.quantity = 1),
-      id: id,
-    };
-    console.log(payload);
-    cartServices
-      .addToCart(payload)
-      .then((res) => {
-        console.log(res);
-        toast.success(res.data.message);
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error(err.response.data.message);
-      });
-  };
-
+  const { handleAddToCart } = useCartContext();
   return (
     <div className="container">
       <Link to={pathDefault.aothun} className="hover:text-[#999999] text-4xl">
         Áo Thun
       </Link>
-      <div className="grid grid-cols-4 gap-5 text-center my-5">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-5 text-center my-5">
         {products.slice(0, 7).map((item, index) => (
           <Link
             key={index}

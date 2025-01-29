@@ -4,12 +4,21 @@ import SearchTemplate from "../../templates/HomeTemplate/components/SearchTempla
 import Navigation from "../../templates/HomeTemplate/components/Navigation";
 import { Outlet } from "react-router-dom";
 import FooterTemplate from "../../templates/HomeTemplate/components/FooterTemplate";
+import useViewPort from "../../hooks/useViewPort";
+import HeaderMobileTemplate from "../../templates/HomeTemplate/components/HeaderMobileTemplate";
 
 const DetailTemplate = () => {
+  const { width } = useViewPort();
   return (
     <>
-      <SearchTemplate />
-      <HeaderTemplate />
+      {width > 600 ? (
+        <>
+          <SearchTemplate />
+          <HeaderTemplate />
+        </>
+      ) : (
+        <HeaderMobileTemplate />
+      )}
       <Navigation />
       <Outlet />
       <FooterTemplate />

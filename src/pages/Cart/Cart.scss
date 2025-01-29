@@ -1,0 +1,19 @@
+.select_custom {
+  .ant-select-selector {
+    border: none !important;
+    padding: 0 !important;
+  }
+  .ant-select-arrow {
+    inset-inline-end: 3px;
+    height: 16px;
+  }
+}
+
+.ant-select-dropdown {
+  max-width: 100% !important;
+  width: auto !important;
+}
+
+.ant-pagination {
+  display: none !important;
+}

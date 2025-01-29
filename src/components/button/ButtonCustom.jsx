@@ -13,11 +13,17 @@ export const ButtonCustom = ({ content, className }) => {
   );
 };
 
-export const ButtonSolid = ({ content, className, variant = "solid" }) => {
+export const ButtonSolid = ({
+  content,
+  className,
+  variant = "solid",
+  onclick,
+}) => {
   return (
     <Button
       color="default"
       variant={variant}
+      onClick={onclick}
       className={`uppercase ${className}`}
     >
       {content}

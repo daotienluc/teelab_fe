@@ -5,8 +5,8 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 import { productServices } from "../../../../services/products.services";
 import { useDebounce } from "use-debounce";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { pathDefault } from "../../../../common/path";
+import { useCartContext } from "../../../../hooks/userCartContext";
 
 const { Search } = Input;
 
@@ -18,8 +18,7 @@ const SearchTemplate = () => {
   const handleChangeKeyWord = (e) => {
     setKeyword(e.target.value);
   };
-
-  const cart = useSelector((state) => state.cart.cart);
+  const { productCart } = useCartContext();
 
   useEffect(() => {
     if (value) {
@@ -48,7 +47,7 @@ const SearchTemplate = () => {
   }, [productList]);
 
   return (
-    <div className="container flex justify-end items-center gap-5 bg-[#F5F5F5] py-3">
+    <div className="container flex justify-center md:justify-end items-center gap-5 bg-[#F5F5F5] py-3 fixed z-[1]">
       <div>
         <Dropdown
           menu={{
@@ -66,7 +65,7 @@ const SearchTemplate = () => {
         </Dropdown>
       </div>
       <Link to={pathDefault.cart}>
-        <Badge count={cart.length}>
+        <Badge count={productCart.length}>
           <ShoppingCartOutlined className="text-3xl" />
         </Badge>
       </Link>

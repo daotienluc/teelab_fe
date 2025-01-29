@@ -14,7 +14,7 @@ const AoHoodie = () => {
       <Link to={pathDefault.aothun} className="hover:text-[#999999] text-4xl">
         Áo hoodie
       </Link>
-      <div className="grid grid-cols-4 gap-5 text-center my-5">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-5 text-center my-5">
         {products.slice(0, 7).map((item, index) => (
           <Link
             key={index}

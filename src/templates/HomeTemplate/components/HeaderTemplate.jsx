@@ -9,7 +9,7 @@ const HeaderTemplate = () => {
 
   return (
     <header>
-      <div className="container py-6 border-b-2">
+      <div className="container py-6 border-b-2 fixed z-10 bg-white mt-16">
         <div className="flex justify-between">
           <div>
             <Link to={pathDefault.homePage} className={styleLinkNavbar}>

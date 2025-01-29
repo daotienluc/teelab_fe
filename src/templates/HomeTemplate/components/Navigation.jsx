@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { productServices } from "../../../services/products.services";
+import useViewPort from "../../../hooks/useViewPort";
 
 const Navigation = () => {
   const [listProduct, setListProduct] = useState([]);
+  const { width } = useViewPort();
   useEffect(() => {
     productServices
       .productByCategory()
@@ -16,7 +18,13 @@ const Navigation = () => {
   }, []);
   const styleLinkNavbar = " text-[#333333] text-base hover:text-[#999999]";
   return (
-    <div className="max-w-6xl m-auto flex justify-between py-3">
+    <div
+      className={
+        width > 600
+          ? "max-w-6xl mx-auto flex pt-40 justify-between py-3"
+          : "hidden"
+      }
+    >
       {listProduct.map((item, index) => (
         <Link
           key={index}

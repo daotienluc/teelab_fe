@@ -5,6 +5,9 @@ export const cartServices = {
     return http.post("/cart/addToCart", data);
   },
   getCartById: (id) => {
-    return http.post("/cart/getCartById", { id });
+    return http.get(`/cart/getCartById/${id}`);
+  },
+  deleteProductCart: (id) => {
+    return http.delete(`/cart/deleteProductCart/${id}`);
   },
 };

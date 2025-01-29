@@ -82,7 +82,7 @@ const HeaderMobileTemplate = () => {
             {userInfo ? null : (
               <ButtonSolid
                 content="Đăng nhập"
-                onclick={() => {
+                handleClick={() => {
                   navigate(pathDefault.login);
                 }}
               />

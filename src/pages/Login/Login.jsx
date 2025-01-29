@@ -77,7 +77,7 @@ const Login = () => {
       <div className="signIn_form h-full px-10 flex flex-col justify-between mx-auto lg:mx-0 w-full lg:w-auto">
         {/* Logo and back to homePage */}
         <div className="flex justify-between items-center">
-          <Icons.Logo />
+          <Icons.Logo className={width < 600 ? "w-40" : ""} />
           <Link to={pathDefault.homePage}>
             <LeftOutlined /> Go back
           </Link>

@@ -10,6 +10,7 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 import { ButtonSolid } from "../../../components/button/ButtonCustom";
 import { productServices } from "../../../services/products.services";
 import useViewPort from "../../../hooks/useViewPort";
+import { useCartContext } from "../../../hooks/userCartContext";
 
 const ProductDetail = () => {
   const [count, setCount] = useState(1);
@@ -20,6 +21,7 @@ const ProductDetail = () => {
 
   const { product_id } = useParams();
   const { width } = useViewPort();
+  const { handleAddToCart } = useCartContext();
 
   useEffect(() => {
     productServices
@@ -223,7 +225,16 @@ const ProductDetail = () => {
               </div>
 
               <div className="grid grid-cols-2 gap-2">
-                <ButtonSolid className="py-5" content="Thêm vào giỏ hàng" />
+                <ButtonSolid
+                  onClick={() => {
+                    handleAddToCart({
+                      ...product,
+                      color: product.color.toString(),
+                    });
+                  }}
+                  className="py-5"
+                  content="Thêm vào giỏ hàng"
+                />
                 <ButtonSolid className="py-5" content="Mua ngay" />
               </div>
             </div>
@@ -463,7 +474,16 @@ const ProductDetail = () => {
             </div>
 
             <div className="grid grid-cols-2 gap-2">
-              <ButtonSolid className="py-5" content="Thêm vào giỏ hàng" />
+              <ButtonSolid
+                onClick={() => {
+                  handleAddToCart({
+                    ...product,
+                    color: product.color.toString(),
+                  });
+                }}
+                className="py-5"
+                content="Thêm vào giỏ hàng"
+              />
               <ButtonSolid className="py-5" content="Mua ngay" />
             </div>
           </div>

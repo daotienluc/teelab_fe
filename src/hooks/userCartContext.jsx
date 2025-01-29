@@ -2,15 +2,21 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { cartServices } from "../services/cart.services";
 import jwtDecode from "jwt-decode";
 import { toast } from "react-toastify";
+import { pathDefault } from "../common/path";
+import { useNavigate } from "react-router-dom";
 export const CartContext = createContext();
 
 export const UseCartProvider = ({ children }) => {
   const [productCart, setProductCart] = useState([]);
-  const userlocalStorage = JSON.parse(localStorage.getItem("userData"));
-  const { userId } = jwtDecode(userlocalStorage.accessToken);
+  const userlocalStorage = JSON.parse(localStorage.getItem("userData") || "{}");
+  const userId = userlocalStorage.accessToken
+    ? jwtDecode(userlocalStorage.accessToken)?.userId
+    : null;
   useEffect(() => {
     handleGetProductCart();
   }, []);
+
+  const navigate = useNavigate();
 
   const handleGetProductCart = () => {
     cartServices
@@ -28,6 +34,13 @@ export const UseCartProvider = ({ children }) => {
   };
 
   const handleAddToCart = (product) => {
+    if (!userId) {
+      toast.error("Vui lòng đăng nhập để thêm sản phẩm !");
+      setTimeout(() => {
+        navigate(pathDefault.login);
+      }, 2000);
+      return;
+    }
     if (product.sizes === null) {
       product.sizes = "M";
     }

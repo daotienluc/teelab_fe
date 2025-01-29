@@ -5,8 +5,14 @@ import { useState } from "react";
 const useUser = () => {
   const [userInfo, setUserInfo] = useState("");
   useEffect(() => {
-    const userlocalStorage = JSON.parse(localStorage.getItem("userData"));
-    setUserInfo(jwtDecode(userlocalStorage.accessToken));
+    const userlocalStorage = JSON.parse(
+      localStorage.getItem("userData") || "{}"
+    );
+    setUserInfo(
+      userlocalStorage.accessToken
+        ? jwtDecode(userlocalStorage.accessToken)?.userId
+        : null
+    );
   }, []);
   return { userInfo };
 };

@@ -17,13 +17,13 @@ export const ButtonSolid = ({
   content,
   className,
   variant = "solid",
-  onclick,
+  handleClick,
 }) => {
   return (
     <Button
       color="default"
       variant={variant}
-      onClick={onclick}
+      onClick={handleClick}
       className={`uppercase ${className}`}
     >
       {content}

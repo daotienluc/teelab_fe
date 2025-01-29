@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { MdMenu } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { pathDefault } from "../../../common/path";
 import { Icons } from "../../../components/icons/Icons";
 import { ShoppingCartOutlined } from "@ant-design/icons";
@@ -18,6 +18,7 @@ const HeaderMobileTemplate = () => {
   const { userInfo } = useUser();
   const [listProduct, setListProduct] = useState([]);
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     productServices
@@ -82,7 +83,7 @@ const HeaderMobileTemplate = () => {
               <ButtonSolid
                 content="Đăng nhập"
                 onclick={() => {
-                  pathDefault.login;
+                  navigate(pathDefault.login);
                 }}
               />
             )}

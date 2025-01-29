@@ -16,10 +16,14 @@ import ButtonFacebookLogin from "./ButtonFacebookLogin";
 import { useDispatch } from "react-redux";
 import { handleUpdateUser } from "../../redux/slice/user.slice";
 import ButtonGoogleLogin from "./ButtonGoogleLogin";
+import { useMessage } from "../../hooks/messageContext";
+import useViewPort from "../../hooks/useViewPort";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const showMessage = useMessage();
+  const { width } = useViewPort();
 
   const { handleChange, handleBlur, handleSubmit, values, errors, touched } =
     useFormik({
@@ -31,7 +35,9 @@ const Login = () => {
         authService
           .login(values)
           .then((res) => {
-            toast.success("Đăng nhập thành công");
+            width < 600
+              ? showMessage("success", res.data.message)
+              : toast.success(res.data.message);
             // thay đổi dữ liệu cho redux
             dispatch(handleUpdateUser(res.data.metaData));
             localStorage.setItem("userData", JSON.stringify(res.data.metaData));
@@ -39,7 +45,9 @@ const Login = () => {
           })
           .catch((err) => {
             console.log(err);
-            toast.error(err.response.data.message);
+            width < 600
+              ? showMessage("error", err.response.data.message)
+              : toast.error(err.response.data.message);
           });
       },
       // validationSchema
@@ -124,10 +132,10 @@ const Login = () => {
           <div className="flex justify-center gap-2 text-lg">
             <ButtonFacebookLogin />
             <ButtonGoogleLogin />
-            <button className="border-2 flex items-center gap-2 px-5 py-1 rounded-full">
+            {/* <button className="border-2 flex items-center gap-2 px-5 py-1 rounded-full">
               <FaGithub />
               <span className="text-sm font-medium">Github</span>
-            </button>
+            </button> */}
           </div>
         </div>
         {/* đăng ký */}

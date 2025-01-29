@@ -226,7 +226,7 @@ const ProductDetail = () => {
 
               <div className="grid grid-cols-2 gap-2">
                 <ButtonSolid
-                  onClick={() => {
+                  handleClick={() => {
                     handleAddToCart({
                       ...product,
                       color: product.color.toString(),
@@ -475,7 +475,7 @@ const ProductDetail = () => {
 
             <div className="grid grid-cols-2 gap-2">
               <ButtonSolid
-                onClick={() => {
+                handleClick={() => {
                   handleAddToCart({
                     ...product,
                     color: product.color.toString(),

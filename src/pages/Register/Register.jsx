@@ -10,9 +10,13 @@ import { Button, Input } from "antd";
 import Lottie from "react-lottie";
 import { LeftOutlined } from "@ant-design/icons";
 import { authService } from "../../services/auth.services";
+import { useMessage } from "../../hooks/messageContext";
+import useViewPort from "../../hooks/useViewPort";
 
 const Register = () => {
   const navigate = useNavigate();
+  const showMessage = useMessage();
+  const { width } = useViewPort();
 
   const defaultOptions = {
     loop: true,
@@ -34,12 +38,16 @@ const Register = () => {
         authService
           .register(values)
           .then((res) => {
-            toast.success("Đăng ký thành công");
+            width < 600
+              ? showMessage("success", res.data.message)
+              : toast.success(res.data.message);
             navigate(pathDefault.login);
           })
           .catch((err) => {
             console.log(err);
-            toast.error(err.response.data.message);
+            width < 600
+              ? showMessage("error", err.response.data.message)
+              : toast.error(err.response.data.message);
           });
       },
       validationSchema: yup.object({

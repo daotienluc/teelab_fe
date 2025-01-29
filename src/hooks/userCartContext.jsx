@@ -4,6 +4,8 @@ import jwtDecode from "jwt-decode";
 import { toast } from "react-toastify";
 import { pathDefault } from "../common/path";
 import { useNavigate } from "react-router-dom";
+import { useMessage } from "./messageContext";
+import useViewPort from "./useViewPort";
 export const CartContext = createContext();
 
 export const UseCartProvider = ({ children }) => {
@@ -17,6 +19,8 @@ export const UseCartProvider = ({ children }) => {
   }, []);
 
   const navigate = useNavigate();
+  const showMessage = useMessage();
+  const { width } = useViewPort();
 
   const handleGetProductCart = () => {
     cartServices
@@ -35,7 +39,9 @@ export const UseCartProvider = ({ children }) => {
 
   const handleAddToCart = (product) => {
     if (!userId) {
-      toast.error("Vui lòng đăng nhập để thêm sản phẩm !");
+      width < 600
+        ? showMessage("error", "Vui lòng đăng nhập để thêm sản phẩm !")
+        : toast.error("Vui lòng đăng nhập để thêm sản phẩm !");
       setTimeout(() => {
         navigate(pathDefault.login);
       }, 2000);
@@ -53,11 +59,15 @@ export const UseCartProvider = ({ children }) => {
       .addToCart(payload)
       .then((res) => {
         handleGetProductCart();
-        toast.success(res.data.message);
+        width < 600
+          ? showMessage("success", res.data.message)
+          : toast.success(res.data.message);
       })
       .catch((err) => {
         console.log(err);
-        toast.error(err.response.data.message);
+        width < 600
+          ? showMessage("error", err.response.data.message)
+          : toast.error(err.response.data.message);
       });
   };
 

@@ -1,15 +1,37 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { pathDefault } from "../../../common/path";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { formattedAmount } from "../../../common/helpers";
 import useFetchProducts from "../../../hooks/useFetchProducts";
-import { useCartContext } from "../../../hooks/userCartContext";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../../redux/slice/cart.slice";
+import useUser from "../../../hooks/useUser";
+import { toast } from "react-toastify";
+import useViewPort from "../../../hooks/useViewPort";
+import { useMessage } from "../../../hooks/messageContext";
 
 const AoThun = () => {
-  const dataAoThun = 11;
+  const dataAoThun = 1;
   const { products } = useFetchProducts(dataAoThun);
-  const { handleAddToCart } = useCartContext();
+  const { userInfo } = useUser();
+  const { width } = useViewPort();
+  const showMessage = useMessage();
+  const navigate = useNavigate();
+  const dispath = useDispatch();
+  const handleAddToCart = (product) => {
+    if (!userInfo) {
+      width > 600
+        ? toast.error("Vui lòng đăng nhập để thêm sản phẩm !")
+        : showMessage("error", "Vui lòng đăng nhập để thêm sản phẩm !");
+      setTimeout(() => {
+        navigate(pathDefault.login);
+      }, 1500);
+      return;
+    }
+    console.log(product);
+    dispath(addToCart(product));
+  };
   return (
     <div className="container">
       <Link to={pathDefault.aothun} className="hover:text-[#999999] text-4xl">

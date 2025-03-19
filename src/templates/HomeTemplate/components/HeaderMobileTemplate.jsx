@@ -5,19 +5,21 @@ import { Link, useNavigate } from "react-router-dom";
 import { pathDefault } from "../../../common/path";
 import { Icons } from "../../../components/icons/Icons";
 import { ShoppingCartOutlined } from "@ant-design/icons";
-import { useCartContext } from "../../../hooks/userCartContext";
+import { RxCross2 } from "react-icons/rx";
 import { Badge, Dropdown, Input } from "antd";
 import { ButtonSolid } from "../../../components/button/ButtonCustom";
 import { productServices } from "../../../services/products.services";
 import { GoDotFill } from "react-icons/go";
 import useUser from "../../../hooks/useUser";
 import { useDebounce } from "use-debounce";
+import "./HeaderMobileTemplate.scss";
 const { Search } = Input;
 const HeaderMobileTemplate = () => {
-  const { productCart } = useCartContext();
   const { userInfo } = useUser();
   const [listProduct, setListProduct] = useState([]);
+  const [productList, setProductList] = useState([]);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,7 +43,6 @@ const HeaderMobileTemplate = () => {
     setMenuOpen(false);
   };
 
-  const onSearch = (value) => console.log(value);
   const handleChangeKeyWord = (e) => {
     setKeyword(e.target.value);
   };
@@ -49,17 +50,48 @@ const HeaderMobileTemplate = () => {
   const [keyword, setKeyword] = useState("");
   const [value] = useDebounce(keyword, 1000);
 
+  useEffect(() => {
+    if (value) {
+      productServices
+        .getProductByProductName(value)
+        .then((res) => {
+          setProductList(res.data.metaData);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [value]);
+
   const items = [
     {
       key: "1",
       label: (
-        <Search
-          placeholder="Tìm kiếm sản phẩm..."
-          onSearch={onSearch}
-          value={keyword}
-          onChange={handleChangeKeyWord}
-          className="search_custom"
-        />
+        <>
+          <Search
+            placeholder="Tìm kiếm sản phẩm..."
+            value={keyword}
+            onChange={handleChangeKeyWord}
+          />
+          {productList.length > 0 && (
+            <p className="bg-white w-full space-y-3">
+              <p>Gợi ý sản phẩm: </p>
+              {productList.slice(0, 3).map((item) => {
+                return (
+                  <Link
+                    onClick={() => {
+                      setOpen(!open);
+                    }}
+                    to={`/details/${item.product_id}/${item.product_name}`}
+                    className="block"
+                  >
+                    {item.product_name}
+                  </Link>
+                );
+              })}
+            </p>
+          )}
+        </>
       ),
     },
   ];
@@ -90,20 +122,17 @@ const HeaderMobileTemplate = () => {
             <h2 className="text-2xl font-bold my-1">Menu</h2>
             <ul>
               Tất cả sản phẩm
-              <li className="space-y-1">
-                {listProduct.map((item, index) => (
-                  <>
-                    <Link
-                      key={index}
-                      to={`/${item.product_name}`}
-                      className="ml-5 flex items-center gap-1"
-                    >
-                      <GoDotFill className="text-xs" />
-                      {item.product_name}
-                    </Link>
-                  </>
-                ))}
-              </li>
+              {listProduct.map((item, index) => (
+                <li className="space-y-1" key={index}>
+                  <Link
+                    to={`/${item.product_name}`}
+                    className="ml-5 flex items-center gap-1"
+                  >
+                    <GoDotFill className="text-xs" />
+                    {item.product_name}
+                  </Link>
+                </li>
+              ))}
             </ul>
             <Link className="block">Bảng size</Link>
             <Link className="block">Kiểm tra đơn hàng</Link>
@@ -118,16 +147,31 @@ const HeaderMobileTemplate = () => {
       </div>
       <div className="flex items-center gap-2">
         <Dropdown
-          className="w-full"
           menu={{
             items,
           }}
           trigger={["click"]}
+          open={open}
         >
-          <FaSearch className="text-2xl" />
+          {!open ? (
+            <FaSearch
+              className="text-2xl"
+              onClick={() => {
+                setOpen(!open);
+              }}
+            />
+          ) : (
+            <RxCross2
+              className="text-2xl"
+              onClick={() => {
+                setOpen(!open);
+              }}
+            />
+          )}
         </Dropdown>
+
         <Link to={pathDefault.cart}>
-          <Badge count={productCart.length}>
+          <Badge count={0}>
             <ShoppingCartOutlined className="text-3xl" />
           </Badge>
         </Link>

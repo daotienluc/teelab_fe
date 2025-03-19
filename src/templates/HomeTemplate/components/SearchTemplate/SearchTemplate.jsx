@@ -6,11 +6,12 @@ import { productServices } from "../../../../services/products.services";
 import { useDebounce } from "use-debounce";
 import { Link } from "react-router-dom";
 import { pathDefault } from "../../../../common/path";
-import { useCartContext } from "../../../../hooks/userCartContext";
+import { useSelector } from "react-redux";
 
 const { Search } = Input;
 
 const SearchTemplate = () => {
+  const cart = useSelector((state) => state.cartSlice.cart);
   const [keyword, setKeyword] = useState("");
   const [productList, setProductList] = useState([]);
   const [value] = useDebounce(keyword, 1000);
@@ -18,7 +19,6 @@ const SearchTemplate = () => {
   const handleChangeKeyWord = (e) => {
     setKeyword(e.target.value);
   };
-  const { productCart } = useCartContext();
 
   useEffect(() => {
     if (value) {
@@ -65,7 +65,7 @@ const SearchTemplate = () => {
         </Dropdown>
       </div>
       <Link to={pathDefault.cart}>
-        <Badge count={productCart.length}>
+        <Badge count={cart.length}>
           <ShoppingCartOutlined className="text-3xl" />
         </Badge>
       </Link>

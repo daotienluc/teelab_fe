@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 const useUser = () => {
-  const [userInfo, setUserInfo] = useState("");
+  const [userInfo, setUserInfo] = useState(null);
   useEffect(() => {
     const userlocalStorage = JSON.parse(
       localStorage.getItem("userData") || "{}"

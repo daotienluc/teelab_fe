@@ -37,10 +37,8 @@ const AdminTemplate = () => {
     usersServices
       .getUserById(userInfo.userId)
       .then((res) => {
-        if (
-          res.data.metaData.role === "USER" ||
-          res.data.metaData.role === null
-        ) {
+        const role = res.data.metaData.role_id;
+        if (role === 2 || role === null) {
           toast.error("Bạn không có quyền vào trang admin !");
           navigate(pathDefault.homePage);
         }

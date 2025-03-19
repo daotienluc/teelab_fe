@@ -1,0 +1,11 @@
+.radio_custom {
+  .ant-radio-wrapper {
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    padding: 10px;
+    margin-inline-end: 0;
+  }
+  .ant-radio-wrapper::after {
+    content: none !important;
+  }
+}

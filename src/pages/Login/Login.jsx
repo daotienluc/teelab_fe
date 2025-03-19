@@ -141,7 +141,7 @@ const Login = () => {
         {/* đăng ký */}
         <div className="text-center">
           <span>
-            Chưa có tài khoản?{" "}
+            Chưa có tài khoản?
             <Link
               to={pathDefault.register}
               className="font-semibold hover:underline duration-200"

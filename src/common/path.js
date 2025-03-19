@@ -9,4 +9,5 @@ export const pathDefault = {
   register: "/register",
   login: "/login",
   cart: "/cart",
+  checkout: "/checkout",
 };

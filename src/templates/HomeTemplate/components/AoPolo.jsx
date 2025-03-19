@@ -6,7 +6,7 @@ import { formattedAmount } from "../../../common/helpers";
 import useFetchProducts from "../../../hooks/useFetchProducts";
 
 const AoPolo = () => {
-  const dataAopolo = 10;
+  const dataAopolo = 2;
   const { products } = useFetchProducts(dataAopolo);
 
   return (

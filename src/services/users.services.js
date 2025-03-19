@@ -5,7 +5,7 @@ export const usersServices = {
     return http.get("/users/All-users");
   },
   getUserById: (id) => {
-    return http.get(`/users/user/${id}`);
+    return http.get(`/users/getUserById/${id}`);
   },
   addUser: (data) => {
     return http.post("/users/add-user", data);

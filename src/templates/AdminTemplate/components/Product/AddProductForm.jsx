@@ -21,12 +21,11 @@ const AddProductForm = ({ getAllProduct, productCategory }) => {
     initialValues: {
       name: "",
       price: "",
-      quantity: "",
       material: "",
       form: "",
       color: [],
       design: "",
-      product_type: "",
+      product_type_id: "",
       image: "",
       description: "",
     },
@@ -105,41 +104,6 @@ const AddProductForm = ({ getAllProduct, productCategory }) => {
               value={values.price}
               onBlur={handleBlur}
               onChange={handleChange}
-            />
-          </div>
-          <div className="col-span-4">
-            <label className="font-medium block">Quantity</label>
-            <Select
-              className="w-full h-[48px]"
-              placeholder="Select quantity"
-              name="quantity"
-              value={values.quantity || undefined}
-              onBlur={handleBlur}
-              onChange={(value) =>
-                handleChange({ target: { name: "quantity", value } })
-              }
-              options={[
-                {
-                  value: 1,
-                  label: "1",
-                },
-                {
-                  value: 2,
-                  label: "2",
-                },
-                {
-                  value: 3,
-                  label: "3",
-                },
-                {
-                  value: 4,
-                  label: "4",
-                },
-                {
-                  value: 5,
-                  label: "5",
-                },
-              ]}
             />
           </div>
           <div className="col-span-4">
@@ -230,7 +194,7 @@ const AddProductForm = ({ getAllProduct, productCategory }) => {
               value={values.product_type || undefined}
               onBlur={handleBlur}
               onChange={(value) =>
-                handleChange({ target: { name: "product_type", value } })
+                handleChange({ target: { name: "product_type_id", value } })
               }
               options={productCategory.map((item) => {
                 return {

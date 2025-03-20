@@ -1,37 +1,13 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { pathDefault } from "../../../common/path";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { formattedAmount } from "../../../common/helpers";
 import useFetchProducts from "../../../hooks/useFetchProducts";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../../../redux/slice/cart.slice";
-import useUser from "../../../hooks/useUser";
-import { toast } from "react-toastify";
-import useViewPort from "../../../hooks/useViewPort";
-import { useMessage } from "../../../hooks/messageContext";
 
 const AoThun = () => {
-  const dataAoThun = 1;
+  const dataAoThun = 3;
   const { products } = useFetchProducts(dataAoThun);
-  const { userInfo } = useUser();
-  const { width } = useViewPort();
-  const showMessage = useMessage();
-  const navigate = useNavigate();
-  const dispath = useDispatch();
-  const handleAddToCart = (product) => {
-    if (!userInfo) {
-      width > 600
-        ? toast.error("Vui lòng đăng nhập để thêm sản phẩm !")
-        : showMessage("error", "Vui lòng đăng nhập để thêm sản phẩm !");
-      setTimeout(() => {
-        navigate(pathDefault.login);
-      }, 1500);
-      return;
-    }
-    console.log(product);
-    dispath(addToCart(product));
-  };
   return (
     <div className="container">
       <Link to={pathDefault.aothun} className="hover:text-[#999999] text-4xl">
@@ -46,14 +22,7 @@ const AoThun = () => {
           >
             <div className="relative">
               <img src={item.image} alt="" />
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleAddToCart(item);
-                }}
-                className="absolute top-4 -right-4 bg-[#696969] hover:bg-[#333333] rounded-full p-2 flex items-center duration-500 opacity-0 translate-x-[40%] group-hover:opacity-100 group-hover:translate-x-[-30px]"
-              >
+              <button className="absolute top-4 -right-4 bg-[#696969] hover:bg-[#333333] rounded-full p-2 flex items-center duration-500 opacity-0 translate-x-[40%] group-hover:opacity-100 group-hover:translate-x-[-30px]">
                 <ShoppingCartOutlined className="text-xl text-white" />
               </button>
             </div>

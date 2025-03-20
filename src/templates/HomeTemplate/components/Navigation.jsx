@@ -5,6 +5,7 @@ import useViewPort from "../../../hooks/useViewPort";
 
 const Navigation = () => {
   const [listProduct, setListProduct] = useState([]);
+
   const { width } = useViewPort();
   useEffect(() => {
     productServices
@@ -28,7 +29,7 @@ const Navigation = () => {
       {listProduct.map((item, index) => (
         <Link
           key={index}
-          to={`/${item.product_name}`}
+          to={`/productCategory/${item.product_name}/${item.product_type_id}`}
           className={styleLinkNavbar}
         >
           {item.product_name}

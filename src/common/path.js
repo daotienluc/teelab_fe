@@ -4,7 +4,7 @@ export const pathDefault = {
   dashboard: "/admin/dashboard",
   product: "/admin/product",
   user: "/admin/user",
-  aothun: "/ao-thun",
+  productCategory: "/productCategory/:product_name/:product_type_id",
   details: "/details/:product_id/:product_name",
   register: "/register",
   login: "/login",

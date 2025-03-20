@@ -17,6 +17,7 @@ import ProductDetail from "./pages/Detail/components/ProductDetail";
 import Cart from "./pages/Cart/Cart";
 import { MessageProvider } from "./hooks/messageContext";
 import Checkout from "./pages/Checkout/Checkout";
+import ProductsCategory from "./pages/ProductsCategory/ProductsCategory";
 const clientId =
   "222005952578-s02iegnp9pg1vs9ecftf8f660rv2b7hf.apps.googleusercontent.com";
 const arrRouter = [
@@ -31,6 +32,10 @@ const arrRouter = [
   {
     path: pathDefault.checkout,
     element: <Checkout />,
+  },
+  {
+    path: pathDefault.productCategory,
+    element: <ProductsCategory />,
   },
   {
     path: pathDefault.details,

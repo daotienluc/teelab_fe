@@ -29,19 +29,19 @@ const AddProductForm = ({ getAllProduct, productCategory }) => {
       image: "",
       description: "",
     },
+
     onSubmit: (values) => {
       const userData = localStorage.getItem("userData");
       const userDataObject = JSON.parse(userData);
       const userInfo = jwtDecode(userDataObject.accessToken);
       const user_id = userInfo.userId;
-      console.log(user_id);
       // Chuyển color thành chuỗi trước khi gửi lên server
       const productData = {
         ...values,
         color: values.color.join(","),
         user_id,
       };
-
+      console.log(values);
       productServices
         .addProduct(productData)
         .then((res) => {
@@ -191,7 +191,7 @@ const AddProductForm = ({ getAllProduct, productCategory }) => {
               className="w-full h-[48px]"
               placeholder="Select category"
               name="product_type"
-              value={values.product_type || undefined}
+              value={values.product_type_id || null}
               onBlur={handleBlur}
               onChange={(value) =>
                 handleChange({ target: { name: "product_type_id", value } })

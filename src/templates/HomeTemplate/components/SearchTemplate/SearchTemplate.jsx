@@ -2,20 +2,25 @@ import { Badge, Dropdown, Input, Space } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   DownOutlined,
+  MenuOutlined,
   SearchOutlined,
   ShoppingCartOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import { productServices } from "../../../../services/products.services";
 import { useDebounce } from "use-debounce";
 import { Link } from "react-router-dom";
 import { pathDefault } from "../../../../common/path";
 import { useSelector } from "react-redux";
+import { usersServices } from "../../../../services/users.services";
+import jwtDecode from "jwt-decode";
 
 const SearchTemplate = () => {
   const cart = useSelector((state) => state.cartSlice.cart);
   const [open, setOpen] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [productList, setProductList] = useState([]);
+  const [roleId, setRoleId] = useState("");
   const [value] = useDebounce(keyword, 1000);
   const handleChangeKeyWord = (e) => {
     setKeyword(e.target.value);
@@ -83,6 +88,13 @@ const SearchTemplate = () => {
           <Badge count={cart.length}>
             <ShoppingCartOutlined className="text-3xl" />
           </Badge>
+        </Link>
+        <Link
+          to={pathDefault.dashboard}
+          className="py-2 px-4 rounded-full border border-gray-200 shadow-sm flex items-center space-x-4 cursor-pointer hover:shadow-md"
+        >
+          <MenuOutlined />
+          <UserOutlined />
         </Link>
       </div>
     </>

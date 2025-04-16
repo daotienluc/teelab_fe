@@ -36,7 +36,9 @@ const AllProducts = () => {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  handleAddToCart(item);
+                  const arrColor = item.color.split(",");
+                  const newProduct = { ...item, color: arrColor[0] };
+                  handleAddToCart(newProduct);
                 }}
                 className="absolute top-4 -right-4 bg-[#696969] hover:bg-[#333333] rounded-full p-2 flex items-center duration-500 opacity-0 translate-x-[40%] group-hover:opacity-100 group-hover:translate-x-[-30px]"
               >

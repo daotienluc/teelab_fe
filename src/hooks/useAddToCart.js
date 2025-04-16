@@ -15,6 +15,7 @@ const useAddToCart = () => {
   const dispatch = useDispatch();
 
   const handleAddToCart = (product) => {
+    // const newProduct = {...product , color:}
     if (!userInfo) {
       width > 600
         ? toast.error("Vui lòng đăng nhập để thêm sản phẩm !")

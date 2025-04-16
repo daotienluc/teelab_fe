@@ -132,10 +132,10 @@ const Login = () => {
           <div className="flex justify-center gap-2 text-lg">
             <ButtonFacebookLogin />
             <ButtonGoogleLogin />
-            {/* <button className="border-2 flex items-center gap-2 px-5 py-1 rounded-full">
+            <button className="border-2 flex items-center gap-2 px-5 py-1 rounded-full">
               <FaGithub />
               <span className="text-sm font-medium">Github</span>
-            </button> */}
+            </button>
           </div>
         </div>
         {/* đăng ký */}

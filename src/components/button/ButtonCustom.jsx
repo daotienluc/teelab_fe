@@ -15,12 +15,14 @@ export const ButtonCustom = ({ content, className }) => {
 
 export const ButtonSolid = ({
   content,
+  type,
   className,
   variant = "solid",
   handleClick,
 }) => {
   return (
     <Button
+      type={type}
       color="default"
       variant={variant}
       onClick={handleClick}

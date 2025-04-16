@@ -9,6 +9,7 @@ import SimilarProduct from "./SimilarProduct";
 const ProductDetail = () => {
   const [product, setProduct] = useState("");
   const [colors, setColors] = useState([]);
+  console.log(colors);
   const { product_id } = useParams();
   const { width } = useViewPort();
 
@@ -20,6 +21,7 @@ const ProductDetail = () => {
           ...res.data.metaData,
           color: res.data.metaData.color.split(","),
         };
+        console.log(res.data.metaData);
         setProduct(data);
         setColors(data.color);
       })

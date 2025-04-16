@@ -1,43 +1,160 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Icons } from "../../components/icons/Icons";
 import FormCheckout from "./FormCheckout";
-import { Radio } from "antd";
+import { Radio, Select } from "antd";
 import { FaRegMoneyBillAlt } from "react-icons/fa";
 import "./checkout.scss";
-import aothun from "./../../assets/img/aothun.jpg";
 import { InputForm } from "../../components/input/InputForm";
 import { ButtonSolid } from "../../components/button/ButtonCustom";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LeftOutlined } from "@ant-design/icons";
 import { pathDefault } from "../../common/path";
 import { formattedAmount } from "../../common/helpers";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { checkoutService } from "../../services/checkout.service";
+import jwtDecode from "jwt-decode";
+import TextArea from "antd/es/input/TextArea";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { addressServices } from "../../services/address.services";
+import { usersServices } from "../../services/users.services";
 
 const Checkout = () => {
   const [valueVanChuyen, setValueVanChuyen] = useState(1);
   const [valueThanhToan, setValueThanhToan] = useState(1);
   const [valueMaGiamGia, setValueMaGiamGia] = useState("");
   const [valueTienVanChuyen, setValueTienVanChuyen] = useState(25000);
+  const [valueInfo, setValueInfo] = useState("");
   const cart = useSelector((state) => state.cartSlice.cart);
-  console.log(cart);
+
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const userInfo = jwtDecode(userData.accessToken);
+
+  const [tinhThanh, setTinhThanh] = useState([]);
+  const [huyen, setHuyen] = useState([]);
+  const [xa, setXa] = useState([]);
+
+  const [selectedTinh, setSelectedTinh] = useState(null);
+  const [selectedHuyen, setSelectedHuyen] = useState(null);
+  const [user, setUser] = useState("");
+
+  useEffect(() => {
+    addressServices
+      .getAllTinhThanh()
+      .then((res) => {
+        setTinhThanh(res.data.data);
+      })
+      .catch((err) => console.log(err));
+
+    usersServices
+      .getUserById(userInfo.userId)
+      .then((res) => {
+        setUser(res.data.metaData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  const navigate = useNavigate();
 
   const onChangeVanChuyen = (e) => {
     setValueVanChuyen(e.target.value);
   };
+
   const onChangeThanhToan = (e) => {
     setValueThanhToan(e.target.value);
   };
   const onChangeMaGiamGia = (e) => {
     setValueMaGiamGia(e.target.value);
   };
+  const removeCart = () => {
+    localStorage.removeItem("cart");
+  };
   const totalAmount = cart.reduce((total, product) => {
     return total + product.price * product.quantity;
   }, 0);
   const tong = () => {
-    const mot = formattedAmount(valueTienVanChuyen + totalAmount);
-    const hai = formattedAmount(valueTienVanChuyen * 2 + totalAmount);
-    return valueVanChuyen === 1 ? mot : hai;
+    const giaoHangThuong = valueTienVanChuyen + totalAmount;
+    const giaoHangSieuToc = valueTienVanChuyen * 2 + totalAmount;
+    return valueVanChuyen === 1 ? giaoHangThuong : giaoHangSieuToc;
   };
+  console.log(typeof valueInfo);
+  const handleCheckout = async () => {
+    if (!valueInfo) {
+      toast.warning("Vui lòng nhập đầy đủ thông tin nhận hàng !");
+      return;
+    }
+    const totalPrice = tong();
+    if (valueThanhToan === 2) {
+      checkoutService
+        .payment({
+          addressForm: valueInfo,
+          user_id: userInfo.userId,
+          amounts: totalPrice,
+          products: cart,
+        })
+        .then((res) => {
+          window.location.href = res.data.payUrl;
+          removeCart();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      checkoutService
+        .payLater({
+          addressForm: valueInfo,
+          user_id: userInfo.userId,
+          amounts: totalPrice,
+          products: cart,
+        })
+        .then((res) => {
+          removeCart();
+          toast.success("Thanh toán thành công !");
+          navigate("/");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  const {
+    handleBlur,
+    handleSubmit,
+    handleChange,
+    errors,
+    touched,
+    values,
+    setFieldValue,
+  } = useFormik({
+    initialValues: {
+      hoTen: "",
+      soDienThoai: "",
+      diaChi: "",
+      tinhThanh: null,
+      quanHuyen: null,
+      phuongXa: null,
+      ghiChu: "",
+    },
+    onSubmit: (values) => {
+      setValueInfo(values);
+    },
+    validationSchema: yup.object({
+      hoTen: yup.string().required("Vui lòng nhập họ tên"),
+      soDienThoai: yup
+        .string()
+        .required("Vui lòng nhập số điện thoại")
+        .matches(/^[0-9]{10}$/, "Số điện thoại không hợp lệ"),
+      diaChi: yup.string().required("Vui lòng nhập địa chỉ"),
+      tinhThanh: yup.string().required("Vui lòng chọn tỉnh thành"),
+      quanHuyen: yup.string().required("Vui lòng chọn quận huyện"),
+      phuongXa: yup.string().required("Vui lòng chọn phường xã"),
+    }),
+  });
+
   return (
     <div className="container">
       <div className="grid grid-cols-12 gap-5">
@@ -46,7 +163,141 @@ const Checkout = () => {
             <Icons.Logo />
           </div>
           <div className="grid grid-cols-12 gap-5 pb-10">
-            <FormCheckout />
+            {/* <FormCheckout onSubmitForm={handleCheckoutSubmit} /> */}
+            <form className="col-span-6 space-y-3" onSubmit={handleSubmit}>
+              <h2 className="font-medium text-lg">Thông tin nhận hàng</h2>
+              <InputForm
+                placeholder="Họ và tên"
+                name="hoTen"
+                handleBlur={handleBlur}
+                handleChange={handleChange}
+                value={values.hoTen}
+                error={errors.hoTen}
+                touched={touched.hoTen}
+              />
+              <InputForm
+                placeholder="Số điện thoại"
+                name="soDienThoai"
+                handleBlur={handleBlur}
+                handleChange={handleChange}
+                value={values.soDienThoai}
+                error={errors.soDienThoai}
+                touched={touched.soDienThoai}
+              />
+
+              <InputForm
+                placeholder="Địa chỉ"
+                name="diaChi"
+                handleBlur={handleBlur}
+                handleChange={handleChange}
+                value={values.diaChi}
+                error={errors.diaChi}
+                touched={touched.diaChi}
+              />
+
+              <Select
+                className="w-full"
+                showSearch
+                name="tinhThanh"
+                placeholder="Tỉnh thành"
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                onChange={(value, option) => {
+                  setSelectedTinh(option.id);
+                  setHuyen([]);
+                  setXa([]);
+                  setSelectedHuyen(null);
+                  setFieldValue("tinhThanh", value);
+
+                  addressServices
+                    .getDataHuyen(option.id)
+                    .then((res) => setHuyen(res.data.data))
+                    .catch((err) => console.log(err));
+                }}
+                value={values.tinhThanh}
+                options={tinhThanh.map((item) => ({
+                  value: item.name,
+                  label: item.full_name,
+                  id: item.id,
+                }))}
+              />
+              {errors.tinhThanh && touched.tinhThanh && (
+                <p className="text-red-500 text-sm mt-1">{errors.tinhThanh}</p>
+              )}
+
+              <Select
+                className="w-full"
+                showSearch
+                name="quanHuyen"
+                placeholder="Quận huyện"
+                disabled={!selectedTinh}
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                onChange={(value, option) => {
+                  setSelectedHuyen(option.id);
+                  setXa([]);
+                  setFieldValue("quanHuyen", value);
+
+                  addressServices
+                    .getdataPhuongXa(option.id)
+                    .then((res) => setXa(res.data.data))
+                    .catch((err) => console.log(err));
+                }}
+                value={values.quanHuyen}
+                options={huyen.map((item) => ({
+                  value: item.name,
+                  label: item.full_name,
+                  id: item.id,
+                }))}
+              />
+              {errors.phuongXa && touched.phuongXa && (
+                <p className="text-red-500 text-sm mt-1">{errors.phuongXa}</p>
+              )}
+
+              <Select
+                className="w-full"
+                showSearch
+                name="phuongXa"
+                placeholder="Phường xã"
+                disabled={!selectedHuyen}
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                onChange={(value) => {
+                  setFieldValue("phuongXa", value);
+                }}
+                value={values.phuongXa}
+                options={xa.map((item) => ({
+                  value: item.name,
+                  label: item.full_name,
+                }))}
+              />
+              {errors.quanHuyen && touched.quanHuyen && (
+                <p className="text-red-500 text-sm mt-1">{errors.quanHuyen}</p>
+              )}
+
+              <TextArea
+                placeholder="Ghi chú..."
+                rows={4}
+                value={values.ghiChu}
+                name="ghiChu"
+                onChange={handleChange}
+              />
+              <button
+                type="submit"
+                className="uppercase w-full py-2 rounded-lg bg-black text-white hover:bg-[#3F3F3F]"
+              >
+                Xác nhận thông tim
+              </button>
+            </form>
             <div className="col-span-6 space-y-3">
               <h2 className="font-medium text-lg">Vận chuyển</h2>
               <Radio.Group
@@ -166,18 +417,19 @@ const Checkout = () => {
             </div>
             <div className="flex justify-between items-center text-gray-500 text-sm border-t-2 pt-5">
               <p className="text-lg">Tổng cộng</p>
-              <p>
-                {/* {valueVanChuyen === 1
-                  ? formattedAmount(valueTienVanChuyen + totalAmount)
-                  : formattedAmount(valueTienVanChuyen * 2 + totalAmount)} */}
-                {tong()}
-              </p>
+              <p>{tong()} đ</p>
             </div>
             <div className="flex justify-between items-center">
               <Link to={pathDefault.cart}>
                 <LeftOutlined className="text-xs" /> Quay lại giỏ hàng
               </Link>
-              <ButtonSolid content="Đặt hàng" className="py-5" />
+              <ButtonSolid
+                handleClick={() => {
+                  handleCheckout();
+                }}
+                content="Đặt hàng"
+                className="py-5"
+              />
             </div>
           </div>
         </div>

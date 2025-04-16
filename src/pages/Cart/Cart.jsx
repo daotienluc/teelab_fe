@@ -47,7 +47,6 @@ const Cart = () => {
     {
       title: width < 600 ? null : "Thông tin sản phẩm",
       render: (text, record, index) => {
-        const arrColor = text.color.split(",");
         return (
           <div
             className="flex gap-2
@@ -58,15 +57,9 @@ const Cart = () => {
               <p className="font-medium line-clamp-2">{text.product_name}</p>
               <div className="flex items-center gap-2">
                 <div>
-                  <Select
-                    defaultValue={arrColor[0]}
-                    className="max-w-full select_custom"
-                    options={arrColor.map((item) => {
-                      return { value: item, label: item };
-                    })}
-                  />
+                  <p>{text.color}</p>
                 </div>
-                / <div>{text.design}</div>
+                / <div>{text.material}</div>
               </div>
               {width < 600 ? (
                 <div className="flex justify-between items-center gap-10">
@@ -179,7 +172,10 @@ const Cart = () => {
       <Navigation />
       <div className="container">
         <h2 className="font-normal text-2xl">Giỏ hàng của bạn</h2>
-        <Table dataSource={cart} columns={columns} />
+        <Table
+          dataSource={cart.map((item, index) => ({ ...item, key: index }))}
+          columns={columns}
+        />
         <div className="block md:grid grid-cols-12 py-5 space-y-3">
           <div className="col-start-9 col-end-13 flex justify-between">
             <p>Tổng tiền :</p>

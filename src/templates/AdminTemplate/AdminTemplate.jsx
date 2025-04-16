@@ -9,7 +9,13 @@ import {
 } from "@ant-design/icons";
 import { Button, Dropdown, Layout, Menu, theme } from "antd";
 import { Icons } from "../../components/icons/Icons";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import {
+  Link,
+  NavLink,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { pathDefault } from "../../common/path";
 const { Header, Sider, Content } = Layout;
 import noImg from "./../../assets/img/noImg.jpg";
@@ -24,11 +30,12 @@ const AdminTemplate = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const userData = localStorage.getItem("userData");
-  const userDataObject = JSON.parse(userData);
-  const userInfo = jwtDecode(userDataObject.accessToken);
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const userInfo = jwtDecode(userData.accessToken);
 
   const navigate = useNavigate();
+
+  const location = useLocation();
 
   useEffect(() => {
     if (!userData) {
@@ -97,22 +104,27 @@ const AdminTemplate = () => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["1"]}
+          selectedKeys={[location.pathname]}
           items={[
             {
-              key: "1",
+              key: pathDefault.dashboard,
               icon: <UserOutlined />,
-              label: <Link to={pathDefault.dashboard}>Dashboard</Link>,
+              label: <NavLink to={pathDefault.dashboard}>Dashboard</NavLink>,
             },
             {
-              key: "2",
+              key: pathDefault.product,
               icon: <VideoCameraOutlined />,
-              label: <Link to={pathDefault.product}>Product</Link>,
+              label: <NavLink to={pathDefault.product}>Product</NavLink>,
             },
             {
-              key: "3",
+              key: pathDefault.user,
               icon: <UploadOutlined />,
-              label: <Link to={pathDefault.user}>User</Link>,
+              label: <NavLink to={pathDefault.user}>User</NavLink>,
+            },
+            {
+              key: pathDefault.order,
+              icon: <UploadOutlined />,
+              label: <NavLink to={pathDefault.order}>Order</NavLink>,
             },
           ]}
         />

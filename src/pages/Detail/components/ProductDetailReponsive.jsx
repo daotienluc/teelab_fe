@@ -19,7 +19,6 @@ import { addToCart } from "../../../redux/slice/cart.slice";
 const ProductDetailReponsive = (props) => {
   const { product, colors } = props;
   const [selectedColor, setSelectedColor] = useState("");
-
   const [size, setSize] = useState("S");
   const [count, setCount] = useState(1);
   const { width } = useViewPort();
@@ -28,6 +27,7 @@ const ProductDetailReponsive = (props) => {
   const navigate = useNavigate();
   const dispath = useDispatch();
   const handleAddToCart = (product) => {
+    const newProduct = { ...product, color: selectedColor };
     if (!userInfo) {
       width > 600
         ? toast.error("Vui lòng đăng nhập để thêm sản phẩm !")
@@ -37,7 +37,7 @@ const ProductDetailReponsive = (props) => {
       }, 1500);
       return;
     }
-    dispath(addToCart(product));
+    dispath(addToCart(newProduct));
   };
   return (
     <div className={width > 600 ? "space-y-4 col-span-4" : "space-y-4"}>
@@ -204,7 +204,7 @@ const ProductDetailReponsive = (props) => {
         <ButtonSolid
           className="py-5"
           content="Thêm vào giỏ hàng"
-          handleClick={() => handleAddToCart(product)}
+          handleClick={() => handleAddToCart(product, colors)}
         />
         <ButtonSolid className="py-5" content="Mua ngay" />
       </div>

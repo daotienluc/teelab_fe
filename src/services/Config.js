@@ -1,6 +1,6 @@
 import axios from "axios";
 
 export const http = axios.create({
-  baseURL: "http://localhost:3010/api",
+  baseURL: "https://teelab-be.onrender.com/api",
   timeout: 30000,
 });

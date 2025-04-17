@@ -17,7 +17,9 @@ const HeaderTemplate = () => {
             </Link>
           </div>
           <div>
-            <Link className={styleLinkNavbar}>Chính sách đổi trả</Link>
+            <Link className={styleLinkNavbar} to={pathDefault.returnpolicy}>
+              Chính sách đổi trả
+            </Link>
           </div>
           <div>
             <Link to={pathDefault.homePage}>

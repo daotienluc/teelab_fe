@@ -64,7 +64,7 @@ const ButtonGoogleLogin = () => {
         onClick={() => {
           login();
         }}
-        className="border-2 flex items-center gap-2 px-5 py-1 rounded-full"
+        className="border-2 flex justify-center items-center gap-2 px-5 py-1 rounded-full"
       >
         <FcGoogle />
         <span className="text-sm font-medium">Google</span>

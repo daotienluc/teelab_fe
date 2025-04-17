@@ -11,4 +11,5 @@ export const pathDefault = {
   login: "/login",
   cart: "/cart",
   checkout: "/checkout",
+  returnpolicy: "/return-policy",
 };

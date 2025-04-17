@@ -25,20 +25,6 @@ const Login = () => {
   const showMessage = useMessage();
   const { width } = useViewPort();
 
-  // const userData = JSON.parse(localStorage.getItem("userData"));
-  // const userInfo = jwtDecode(userData.accessToken);
-
-  // useEffect(() => {
-  //   usersServices
-  //     .getUserById(userInfo.userId)
-  //     .then((res) => {
-  //       setRoleId(res.data.metaData.role_id);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, []);
-
   const { handleChange, handleBlur, handleSubmit, values, errors, touched } =
     useFormik({
       initialValues: {
@@ -143,13 +129,13 @@ const Login = () => {
             </div>
           </form>
           <p className="text-center text-lg font-medium my-5">or</p>
-          <div className="flex justify-center gap-2 text-lg">
+          <div className="grid grid-cols-2 gap-2 text-lg">
             <ButtonFacebookLogin />
             <ButtonGoogleLogin />
-            <button className="border-2 flex items-center gap-2 px-5 py-1 rounded-full">
+            {/* <button className="border-2 flex items-center gap-2 px-5 py-1 rounded-full">
               <FaGithub />
               <span className="text-sm font-medium">Github</span>
-            </button>
+            </button> */}
           </div>
         </div>
         {/* đăng ký */}

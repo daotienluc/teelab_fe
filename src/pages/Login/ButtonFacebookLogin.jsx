@@ -74,7 +74,7 @@ const ButtonFacebookLogin = () => {
                   }
                 });
               }}
-              className="border-2 flex items-center gap-2 px-5 py-1 rounded-full"
+              className="border-2 flex items-center justify-center gap-2 px-5 py-1 rounded-full"
             >
               <FaFacebook fill="#1877F2" />
               <span className="text-sm font-medium">FaceBook</span>

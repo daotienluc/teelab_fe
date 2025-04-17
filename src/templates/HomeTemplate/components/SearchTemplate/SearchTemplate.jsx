@@ -18,6 +18,8 @@ import jwtDecode from "jwt-decode";
 const SearchTemplate = () => {
   const cart = useSelector((state) => state.cartSlice.cart);
   const [open, setOpen] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+
   const [keyword, setKeyword] = useState("");
   const [productList, setProductList] = useState([]);
   const [roleId, setRoleId] = useState("");
@@ -25,6 +27,8 @@ const SearchTemplate = () => {
   const handleChangeKeyWord = (e) => {
     setKeyword(e.target.value);
   };
+
+  const token = localStorage.getItem("userData");
 
   useEffect(() => {
     if (value) {
@@ -46,6 +50,7 @@ const SearchTemplate = () => {
 
   const itemListSearch = useMemo(() => {
     return productList.slice(0, 4).map((item) => {
+      console.log(item);
       return {
         key: item.product_id,
         label: (
@@ -62,7 +67,7 @@ const SearchTemplate = () => {
 
   return (
     <>
-      <div className="container flex justify-center md:justify-end items-center gap-5 bg-[#F5F5F5] py-3 fixed z-[1]">
+      <div className="container flex justify-center md:justify-end items-center gap-5 bg-[#F5F5F5] py-3 fixed z-20">
         <div>
           <Dropdown
             menu={{
@@ -89,13 +94,44 @@ const SearchTemplate = () => {
             <ShoppingCartOutlined className="text-3xl" />
           </Badge>
         </Link>
-        <Link
-          to={pathDefault.dashboard}
-          className="py-2 px-4 rounded-full border border-gray-200 shadow-sm flex items-center space-x-4 cursor-pointer hover:shadow-md"
-        >
-          <MenuOutlined />
-          <UserOutlined />
-        </Link>
+        {token ? (
+          <div
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="py-3 px-5 relative rounded-full border border-gray-200 shadow-sm flex items-center space-x-4 cursor-pointer hover:shadow-md"
+          >
+            <MenuOutlined />
+            <UserOutlined />
+            {showDropdown && (
+              <div className=" bg-white w-40 top-12 right-0 absolute z-50 rounded-lg">
+                <Link className="block py-2 px-4 hover:bg-gray-100 font-semibold">
+                  Xin chào !
+                </Link>
+
+                <Link className="block py-2 px-4 hover:bg-gray-100 font-normal">
+                  Profile
+                </Link>
+
+                <div
+                  onClick={() => {
+                    localStorage.removeItem("userData");
+                    navigate(pathDefault.homePage);
+                    window.location.reload();
+                  }}
+                  className=" py-2 px-4 hover:bg-gray-100 font-normal"
+                >
+                  Đăng xuất
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <Link
+            className="px-3 py-1 rounded-lg border border-gray-500"
+            to={pathDefault.login}
+          >
+            Đăng nhập
+          </Link>
+        )}
       </div>
     </>
   );
